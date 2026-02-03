@@ -32,9 +32,15 @@ y = np.where(y == "Iris-setosa", 0, 1) # (3) setosa -> 0, other 1
 #(4) extract the other information defining the classes
 # specifically sepal and petal lengths
 X = df.iloc[0:100, [0, 2]].values  
-print(X.shape)
+# print(X.shape)
 
-# we're gonna plot these badboys.
+# TRAIN THE MODEL
+ppn = Perceptron(eta=0.1, n_iter=10)
+ppn.fit(X, y) # hand off the iris data and correct labels to learning algorithm
+
+# ========================================
+
+# the below plots the data itself.
 # NO perceptron learning at this state.
 
 # plt.scatter(X[:50, 0], X[:50, 1], color='red', marker='o', label='Setosa')
@@ -44,14 +50,21 @@ print(X.shape)
 # plt.legend(loc='upper left')
 # plt.show()
 
-# let's train the perceptron with this data
+# ========================================
 
-ppn = Perceptron(eta=0.1, n_iter=10)
-ppn.fit(X, y)
-plt.plot(range(1, len(ppn.errors_) + 1), ppn.errors_, marker='o')
-plt.xlabel('Epochs')
-plt.ylabel('Number of updates')
-plt.show()
+# let's train the perceptron with this data
+# give a learning rate and iterations
+
+# # plot the number of "errors", or updates made in each epoch to the weights and bias
+# plt.plot(range(1, len(ppn.errors_) + 1), ppn.errors_, marker='o')
+# plt.xlabel('Epochs')
+# plt.ylabel('Number of updates')
+# plt.show()
+
+# ========================================
+
+# now is a given function to be able to depict the decision regions 
+# of the perceptron/classifier
 
 def plot_decision_regions(X, y, classifier, resolution=0.02):
   # setup marker generator and color map
@@ -63,7 +76,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
   x2_min, x2_max = X[:, 1].min() - 1, X[:, 1].max() + 1
   xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, resolution),
   np.arange(x2_min, x2_max, resolution))
-  lab = classifier.predict(np.array([xx1.ravel(), xx2.ravel()]).T)
+  lab = classifier.predict(np.array([xx1.ravel(), xx2.ravel()]).T) # T -> transpose
   lab = lab.reshape(xx1.shape)
   plt.contourf(xx1, xx2, lab, alpha=0.3, cmap=cmap)
   plt.xlim(xx1.min(), xx1.max())
@@ -78,6 +91,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
       label=f'Class {cl}',
       edgecolor='black')
     
+# plotting of the linearly separable decision regions.
 plot_decision_regions(X, y, classifier=ppn)
 plt.xlabel('Sepal length [cm]')
 plt.ylabel('Petal length [cm]')

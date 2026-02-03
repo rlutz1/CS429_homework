@@ -29,7 +29,12 @@ class Perceptron:
     # https://numpy.org/doc/stable/reference/random/generated/numpy.random.RandomState.normal.html
     # note: X.shape[1] corresponds to second in tuple, which is second dimension. 
     # this is kind of columns.
+    # weights is really how much weight to give to each piece of input data 
+    # in order to best classify. so, for the irises, given 2 pieces of info 
+    # (petal and sepal size), the weight will be two values, weights given to 
+    # the input in our linear separation.
     self.w_ = rgen.normal(loc = 0.0, scale = 0.01, size = X.shape[1]) 
+    # the bias is a shift to the separation.
     self.b_ = np.float64(0.) # just 0 as a float value (float_ used as to not clash with py types)
     self.errors_ = [] # empty error count tracker
     for _ in range(self.n_iter): # iterate this many times
