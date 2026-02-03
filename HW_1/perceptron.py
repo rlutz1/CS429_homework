@@ -27,8 +27,10 @@ class Perceptron:
     rgen = np.random.RandomState(self.random_state) # rand num generator, LEGACY!
     # generate random weights; .normal generates from a gaussian distribution.
     # https://numpy.org/doc/stable/reference/random/generated/numpy.random.RandomState.normal.html
+    # note: X.shape[1] corresponds to second in tuple, which is second dimension. 
+    # this is kind of columns.
     self.w_ = rgen.normal(loc = 0.0, scale = 0.01, size = X.shape[1]) 
-    self.b_ = np.float_(0.) # just 0 as a float value (float_ used as to not clash with py types)
+    self.b_ = np.float64(0.) # just 0 as a float value (float_ used as to not clash with py types)
     self.errors_ = [] # empty error count tracker
     for _ in range(self.n_iter): # iterate this many times
       errors = 0
@@ -38,7 +40,9 @@ class Perceptron:
       for xi, target in zip(X, y): # zip x with y as tuples,
         # update for the weight: w = w + eta * (predict - correct label) * xi
         update = self.eta * (target - self.predict(xi))
+        # print("before\n", self.w_)
         self.w_ += update * xi
+        # print("after\n", self.w_)
         # update for b: b = b + eta * (predict - correct label) 
         self.b_ += update
         errors += int(update != 0.0) # add to errors if error made, update is 0 means no misclass.
