@@ -35,7 +35,10 @@ X = df.iloc[0:100, [0, 2]].values
 # print(X.shape)
 
 # TRAIN THE MODEL
-ada = AdalineGD(eta=0.001, n_iter=100) # note that eta needs to be small here!
+# notice: 0.0001 && 100 iterations throws it way off
+#         needs at least 1000 iterations or TOLERANCE control to be accurate.
+#         different parameters vary the linear separation wildly.
+ada = AdalineGD(eta=0.01, n_iter=10) # note that eta needs to be small here!
 ada.fit(X, y) # hand off the iris data and correct labels to learning algorithm
 
 
@@ -88,13 +91,8 @@ def plot_loss():
   plt.show()
 
 def plot_linear_sep(X, y, classifier):
-  # fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
-  # ada1 = AdalineGD(n_iter=100, eta=0.0001).fit(X, y)
-  # fake_x_line = np.array([[7.5, 3]])
-  # # print(ada1.net_input(fake_x_line))
-  # fake_y_line = np.array(ada1.predict(fake_x_line))
-  # flower = [6, 4] # versi
-  flower = [4.5, 1] # sera
+  flower = [6, 4] # versi
+  # flower = [4.5, 1] # sera
   p = classifier.predict(flower)
   if p == 0:
     print("setosa")
