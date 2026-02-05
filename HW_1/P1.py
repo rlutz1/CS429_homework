@@ -63,10 +63,12 @@ class AdalineGD:
     rgen = np.random.RandomState(self.random_state)
     self.w_ = rgen.normal(loc=0.0, scale=0.01,size=X.shape[1])
     self.b_ = np.float64(0.)
-    self.w_.append(np.float64(0.)) # change: absorb b into w
-    X.append(1) # change: absorb a 1 into X
-    print(self.w_)
-    print(X)
+    self.w_ = np.hstack((self.w_, np.float64(0.))) # change: absorb b into w
+    dummy = [1] * X.shape[1]
+    # print(dummy)
+    X = np.vstack((X, dummy)) # change: absorb a 1 into X
+    # print(self.w_)
+    # print(X)
     self.losses_ = []
 
     for i in range(self.n_iter): 
