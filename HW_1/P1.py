@@ -61,13 +61,13 @@ class AdalineGD:
     self : object
     """
     rgen = np.random.RandomState(self.random_state)
-    self.w_ = rgen.normal(loc=0.0, scale=0.01,size=X.shape[1])
+    self.w_ = rgen.normal(loc=0.0, scale=0.01,size=X.shape[1] + 1)
     # self.b_ = np.float64(0.)
-    self.w_ = np.hstack((self.w_, np.float64(0.))) # change: absorb b into w
-    dummy = np.zeros((X.shape[0], 1))
-    dummy[0][0] = 1
-    print(dummy)
-    self.samples = np.hstack((X, dummy)) # change: absorb a 1 into X
+    self.w_[-1] = np.float64(0.) # change: absorb b into w as the last element
+    # dummy = np.zeros((X.shape[0], 1))
+    # dummy[0][0] = 1
+    # print(dummy)
+    # self.samples = np.hstack((X, dummy)) # change: absorb a 1 into X
     print(self.w_)
     # print(X)
     self.losses_ = []
@@ -76,7 +76,7 @@ class AdalineGD:
       net_input = self.net_input(X)
       output = self.activation(net_input)
       errors = (y - output) 
-      self.w_ += self.eta * 2.0 * self.samples.T.dot(errors) / self.samples.shape[0] 
+      self.w_[0:(X.shape[1])] += self.eta * 2.0 * X.T.dot(errors) / X.shape[0]
       self.w_[-1] += self.eta * 2.0 * errors.mean() # change: update b in w now
       loss = (errors**2).mean() 
       self.losses_.append(loss)
@@ -86,10 +86,10 @@ class AdalineGD:
   def net_input(self, X):
     """Calculate net input"""
     # need to account for not a million bs....
-    dummy = np.zeros((X.shape[0], 1))
-    dummy[0][0] = 1
+    # dummy = np.zeros((X.shape[0], 1))
+    # dummy[0][0] = 1
     # print(np.dot(np.hstack((X, dummy)), self.w_))
-    return np.dot(np.hstack((X, dummy)), self.w_) # change: b is in w, remove it
+    return np.dot(X, self.w_[0:(X.shape[1])])  + self.w_[-1]# change: b is in w, remove it
   
   def activation(self, X):
     """Compute linear activation"""
