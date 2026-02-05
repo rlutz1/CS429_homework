@@ -30,28 +30,44 @@ import matplotlib.pyplot as plt
 # SCRIPTING
 # ===================================================================
 
-s = 'https://archive.ics.uci.edu/ml/'\
+# grab the iris dataset
+iris = 'https://archive.ics.uci.edu/ml/'\
     'machine-learning-databases/iris/iris.data'
-print('From URL:', s)
-
-df = pd.read_csv(s,
+# 'machine-learning-databases/wine/wine.data'
+df = pd.read_csv(iris,
      header=None,
      encoding='utf-8')
-
+# print(df)
 
 # set up classes for setosa vs versi
-y = df.iloc[0:100, 4].values # values in the 4th column of csv -> names of iris
-y = np.where(y == "Iris-setosa", 0, 1) # setosa -> 0, versi 1
+y_iris = df.iloc[0:100, 4].values # values in the 4th column of csv -> names of iris
+y_iris = np.where(y_iris == "Iris-setosa", 0, 1) # setosa -> 0, versi 1
 
 # extract the other information defining the classes
-# specifically sepal and petal lengths
-X = df.iloc[0:100, [0, 2]].values  
+X_iris = df.iloc[0:100, range(0, 4)].values  
 
-ada = AdalineGD(eta=0.01, n_iter=10) # note that eta needs to be small here!
-ada.fit(X, y) # hand off the iris data and correct labels to learning algorithm
-# plotting of the linearly separable decision regions.
-plot_decision_regions(X, y, classifier=ada)
+# grab the wine dataset
+wine = 'https://archive.ics.uci.edu/ml/'\
+    'machine-learning-databases/wine/wine.data'
+df = pd.read_csv(wine,
+     header=None,
+     encoding='utf-8')
+# print(df)
 
-log = LogisticRegressionGD(eta=0.01, n_iter=100)
-log.fit(X, y)
-plot_decision_regions(X, y, classifier=log)
+y_wine = df.iloc[0:100, 0].values # values in the 4th column of csv -> type of grape
+# print(y_wine)
+y_wine = np.where(y_wine == 1, 0, 1) # classes 1 (0) and 2 of grapes (1)
+# print(y_wine)
+# extract the other information defining the classes
+X_wine = df.iloc[0:100, [1, 5, 10, 11]].values # alcohol(1), magnesium(5), color intensity(10), hue(11)
+# print(X_wine)
+
+
+# ada = AdalineGD(eta=0.01, n_iter=10) # note that eta needs to be small here!
+# ada.fit(X, y) # hand off the iris data and correct labels to learning algorithm
+# # plotting of the linearly separable decision regions.
+# plot_decision_regions(X, y, classifier=ada)
+
+# log = LogisticRegressionGD(eta=0.01, n_iter=100)
+# log.fit(X, y)
+# plot_decision_regions(X, y, classifier=log)
