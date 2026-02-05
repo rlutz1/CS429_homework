@@ -17,8 +17,8 @@ In order to make apple-to-apple comparisons,
 you should use the same hyperparameters 
 and number of epochs for both learning algorithms.
 """
-
-from log_ada_absorbed_bias import AdalineGD, LogisticRegressionGD
+from original_codes.adaline import AdalineGD
+# from log_ada_absorbed_bias import AdalineGD, LogisticRegressionGD
 from plotters import plot_decision_regions
 import numpy as np
 from matplotlib.colors import ListedColormap
@@ -57,16 +57,20 @@ df = pd.read_csv(wine,
 y_wine = df.iloc[0:100, 0].values # values in the 4th column of csv -> type of grape
 # print(y_wine)
 y_wine = np.where(y_wine == 1, 0, 1) # classes 1 (0) and 2 of grapes (1)
-# print(y_wine)
+# print(y_wine.size)
 # extract the other information defining the classes
-X_wine = df.iloc[0:100, [1, 5, 10, 11]].values # alcohol(1), magnesium(5), color intensity(10), hue(11)
+# alcohol(1), magnesium(5), color intensity(10), hue(11) 
+# X_wine = df.iloc[0:100, [1, 5, 10, 11]].values # getting the vibe this is not linearly separable
+# X_wine = df.iloc[0:100, [10, 11]].values # this one kinda works... with eta = 0.01, n = 10000
+X_wine = df.iloc[0:100, range(1, 4)].values # this one kinda works... with eta = 0.01, n = 10000
+print(X_wine)
 # print(X_wine)
 
 
-# ada = AdalineGD(eta=0.01, n_iter=10) # note that eta needs to be small here!
-# ada.fit(X, y) # hand off the iris data and correct labels to learning algorithm
-# # plotting of the linearly separable decision regions.
-# plot_decision_regions(X, y, classifier=ada)
+ada = AdalineGD(eta=0.01, n_iter=100) # note that eta needs to be small here!
+ada.fit(X_wine, y_wine) # hand off the iris data and correct labels to learning algorithm
+# plotting of the linearly separable decision regions.
+plot_decision_regions(X_wine, y_wine, classifier=ada)
 
 # log = LogisticRegressionGD(eta=0.01, n_iter=100)
 # log.fit(X, y)
