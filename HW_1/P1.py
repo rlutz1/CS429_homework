@@ -62,28 +62,30 @@ class AdalineGD:
     """
     rgen = np.random.RandomState(self.random_state)
     self.w_ = rgen.normal(loc=0.0, scale=0.01,size=X.shape[1])
-    self.b_ = np.float64(0.)
+    # self.b_ = np.float64(0.)
     self.w_ = np.hstack((self.w_, np.float64(0.))) # change: absorb b into w
-    dummy = [1] * X.shape[1]
+    dummy = np.ones((X.shape[0], 1))
     # print(dummy)
-    X = np.vstack((X, dummy)) # change: absorb a 1 into X
-    # print(self.w_)
-    # print(X)
+    self.samples = np.hstack((X, dummy)) # change: absorb a 1 into X
+    print(self.w_)
+    print(X)
     self.losses_ = []
 
     for i in range(self.n_iter): 
       net_input = self.net_input(X)
       output = self.activation(net_input)
       errors = (y - output) 
-      self.w_ += self.eta * 2.0 * X.T.dot(errors) / X.shape[0] 
-      self.b_ += self.eta * 2.0 * errors.mean()
+      self.w_ += self.eta * 2.0 * self.samples.T.dot(errors) / self.samples.shape[0] 
+      self.w_[-1] += self.eta * 2.0 * errors.mean() # change: update b in w now
       loss = (errors**2).mean() 
       self.losses_.append(loss)
     return self
   
   def net_input(self, X):
     """Calculate net input"""
-    return np.dot(X, self.w_) + self.b_
+    # need to account for not a million bs....
+    dummy = np.ones((X.shape[0], 1))
+    return np.dot(np.hstack((X, dummy)), self.w_) # change: b is in w, remove it
   
   def activation(self, X):
     """Compute linear activation"""
@@ -164,7 +166,33 @@ class LogisticRegressionGD:
     """Return class label after unit step"""
     return np.where(self.activation(self.net_input(X)) >= 0.5, 1, 0)
   
+# now is a given function to be able to depict the decision regions 
+# of the perceptron/classifier
 
+def plot_decision_regions(X, y, classifier, resolution=0.02):
+  # setup marker generator and color map
+  markers = ('o', 's', '^', 'v', '<')
+  colors = ('red', 'blue', 'lightgreen', 'gray', 'cyan')
+  cmap = ListedColormap(colors[:len(np.unique(y))])
+  # plot the decision surface
+  x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+  x2_min, x2_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+  xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, resolution), np.arange(x2_min, x2_max, resolution))
+  lab = classifier.predict(np.array([xx1.ravel(), xx2.ravel()]).T) # T -> transpose
+  lab = lab.reshape(xx1.shape)
+  plt.contourf(xx1, xx2, lab, alpha=0.3, cmap=cmap)
+  plt.xlim(xx1.min(), xx1.max())
+  plt.ylim(xx2.min(), xx2.max())
+  # plot class examples
+  for idx, cl in enumerate(np.unique(y)):
+    plt.scatter(x=X[y == cl, 0],
+      y=X[y == cl, 1],
+      alpha=0.8,
+      c=colors[idx],
+      marker=markers[idx],
+      label=f'Class {cl}',
+      edgecolor='black')
+  plt.show()
 # ===================================================================
 # SCRIPTING
 # ===================================================================
@@ -186,5 +214,7 @@ y = np.where(y == "Iris-setosa", 0, 1) # setosa -> 0, versi 1
 # specifically sepal and petal lengths
 X = df.iloc[0:100, [0, 2]].values  
 
-ada = AdalineGD(eta=0.01, n_iter=10) # note that eta needs to be small here!
+ada = AdalineGD(eta=0.001, n_iter=100) # note that eta needs to be small here!
 ada.fit(X, y) # hand off the iris data and correct labels to learning algorithm
+# plotting of the linearly separable decision regions.
+plot_decision_regions(X, y, classifier=ada)
