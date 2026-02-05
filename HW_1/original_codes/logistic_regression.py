@@ -55,7 +55,7 @@ class LogisticRegressionGD:
     """
     rgen = np.random.RandomState(self.random_state)
     self.w_ = rgen.normal(loc=0.0, scale=0.01, size=X.shape[1])
-    self.b_ = np.float_(0.)
+    self.b_ = np.float64(0.)
     self.losses_ = []
     for i in range(self.n_iter):
       net_input = self.net_input(X)
@@ -67,6 +67,7 @@ class LogisticRegressionGD:
               - ((1 - y).dot(np.log(1 - output)))
               / X.shape[0])
       self.losses_.append(loss)
+    print("after train ", self.w_, self.b_)
     return self
   
   def net_input(self, X):
