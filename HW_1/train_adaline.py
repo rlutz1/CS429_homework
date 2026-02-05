@@ -35,7 +35,7 @@ X = df.iloc[0:100, [0, 2]].values
 # print(X.shape)
 
 # TRAIN THE MODEL
-ada = AdalineGD(eta=0.001, n_iter=100)
+ada = AdalineGD(eta=0.001, n_iter=100) # note that eta needs to be small here!
 ada.fit(X, y) # hand off the iris data and correct labels to learning algorithm
 
 
@@ -50,8 +50,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
   # plot the decision surface
   x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
   x2_min, x2_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-  xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, resolution),
-  np.arange(x2_min, x2_max, resolution))
+  xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, resolution), np.arange(x2_min, x2_max, resolution))
   lab = classifier.predict(np.array([xx1.ravel(), xx2.ravel()]).T) # T -> transpose
   lab = lab.reshape(xx1.shape)
   plt.contourf(xx1, xx2, lab, alpha=0.3, cmap=cmap)
@@ -67,9 +66,56 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
       label=f'Class {cl}',
       edgecolor='black')
     
+  # plt.xlabel('Sepal length [cm]')
+  # plt.ylabel('Petal length [cm]')
+  # plt.legend(loc='upper left')
+  # plt.show()
+
+
+def plot_loss():
+
+  fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
+  ada1 = AdalineGD(n_iter=15, eta=0.1).fit(X, y)
+  ax[0].plot(range(1, len(ada1.losses_) + 1), np.log10(ada1.losses_), marker='o')
+  ax[0].set_xlabel('Epochs')
+  ax[0].set_ylabel('log(Mean squared error)')
+  ax[0].set_title('Adaline - Learning rate 0.1')
+  ada2 = AdalineGD(n_iter=15, eta=0.0001).fit(X, y)
+  ax[1].plot(range(1, len(ada2.losses_) + 1), ada2.losses_, marker='o')
+  ax[1].set_xlabel('Epochs')
+  ax[1].set_ylabel('Mean squared error')
+  ax[1].set_title('Adaline - Learning rate 0.0001')
+  plt.show()
+
+def plot_linear_sep():
+  # fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
+  ada1 = AdalineGD(n_iter=100, eta=0.0001).fit(X, y)
+  # fake_x_line = np.array([[7.5, 3]])
+  # # print(ada1.net_input(fake_x_line))
+  # fake_y_line = np.array(ada1.predict(fake_x_line))
+  flower = [6, 4]
+  p = ada1.predict(flower)
+  if p == 0:
+    print("setosa")
+  else:
+    print("versicolor")
+  # fake_y_line = None
+  plt.scatter(X[:50, 0], X[:50, 1], color='red', marker='o', label='Setosa')
+  plt.scatter(X[50:100, 0], X[50:100, 1],color='blue', marker='s', label='Versicolor')
+  plt.xlabel('Sepal length [cm]')
+  plt.ylabel('Petal length [cm]')
+  plt.legend(loc='upper left')
+  plt.plot(flower[0], flower[1], marker='o')
+  # ax[0].set_xlabel('Iris Data')
+  # ax[0].set_ylabel('sakldnaskd')
+  # ax[0].set_title('Adaline - Learning rate 0.0001')
+  plt.show()
+
 # plotting of the linearly separable decision regions.
-plot_decision_regions(X, y, classifier=ada)
-plt.xlabel('Sepal length [cm]')
-plt.ylabel('Petal length [cm]')
-plt.legend(loc='upper left')
-plt.show()
+# plot_decision_regions(X, y, classifier=ada)
+
+# plot losses 
+# plot_loss()
+
+# plot just the line.
+plot_linear_sep()
