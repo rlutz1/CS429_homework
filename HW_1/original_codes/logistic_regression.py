@@ -1,5 +1,19 @@
 import numpy as np
 
+"""
+this learning model focuses on PROBABILITY.
+essentially we are using an activation function that acts 
+as a probability metric to say how likely it is that 
+this sample is in class 1.
+typically we use the probability threshold of 0.5 
+to assign that choice (see predict())
+
+we use the same method of gradient descent on the 
+new loss function, which is derived from defining 
+the likelihood, setting it up as a loss function,
+and maximizing it (which is just minimizing the (-) func).
+"""
+
 class LogisticRegressionGD:
   """Gradient descent-based logistic regression classifier.
   Parameters
