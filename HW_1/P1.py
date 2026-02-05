@@ -14,6 +14,9 @@ to the original one.
 """
 
 import numpy as np
+from matplotlib.colors import ListedColormap
+import pandas as pd
+import matplotlib.pyplot as plt
 
 """
 code from the text book for the adaline learning model.
@@ -60,6 +63,10 @@ class AdalineGD:
     rgen = np.random.RandomState(self.random_state)
     self.w_ = rgen.normal(loc=0.0, scale=0.01,size=X.shape[1])
     self.b_ = np.float64(0.)
+    self.w_.append(np.float64(0.)) # change: absorb b into w
+    X.append(1) # change: absorb a 1 into X
+    print(self.w_)
+    print(X)
     self.losses_ = []
 
     for i in range(self.n_iter): 
@@ -154,3 +161,28 @@ class LogisticRegressionGD:
   def predict(self, X):
     """Return class label after unit step"""
     return np.where(self.activation(self.net_input(X)) >= 0.5, 1, 0)
+  
+
+# ===================================================================
+# SCRIPTING
+# ===================================================================
+
+s = 'https://archive.ics.uci.edu/ml/'\
+    'machine-learning-databases/iris/iris.data'
+print('From URL:', s)
+
+df = pd.read_csv(s,
+     header=None,
+     encoding='utf-8')
+
+
+# set up classes for setosa vs versi
+y = df.iloc[0:100, 4].values # values in the 4th column of csv -> names of iris
+y = np.where(y == "Iris-setosa", 0, 1) # setosa -> 0, versi 1
+
+# extract the other information defining the classes
+# specifically sepal and petal lengths
+X = df.iloc[0:100, [0, 2]].values  
+
+ada = AdalineGD(eta=0.01, n_iter=10) # note that eta needs to be small here!
+ada.fit(X, y) # hand off the iris data and correct labels to learning algorithm
