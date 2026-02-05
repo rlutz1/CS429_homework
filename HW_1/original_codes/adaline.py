@@ -61,10 +61,12 @@ class AdalineGD:
       self.b_ += self.eta * 2.0 * errors.mean() # update function!
       loss = (errors**2).mean() # loss is the mean squared error objective func!
       self.losses_.append(loss) # track the loss
+    print("after train: ", self.w_, self.b_)
     return self
   
   def net_input(self, X):
     """Calculate net input"""
+    print(np.dot(X, self.w_) + self.b_)
     return np.dot(X, self.w_) + self.b_
   
   def activation(self, X):
