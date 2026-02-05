@@ -1,5 +1,6 @@
 # now is a given function to be able to depict the decision regions 
 # of the perceptron/classifier
+
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 import numpy as np
