@@ -87,14 +87,15 @@ def plot_loss():
   ax[1].set_title('Adaline - Learning rate 0.0001')
   plt.show()
 
-def plot_linear_sep():
+def plot_linear_sep(X, y, classifier):
   # fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
-  ada1 = AdalineGD(n_iter=100, eta=0.0001).fit(X, y)
+  # ada1 = AdalineGD(n_iter=100, eta=0.0001).fit(X, y)
   # fake_x_line = np.array([[7.5, 3]])
   # # print(ada1.net_input(fake_x_line))
   # fake_y_line = np.array(ada1.predict(fake_x_line))
-  flower = [6, 4]
-  p = ada1.predict(flower)
+  # flower = [6, 4] # versi
+  flower = [4.5, 1] # sera
+  p = classifier.predict(flower)
   if p == 0:
     print("setosa")
   else:
@@ -112,10 +113,10 @@ def plot_linear_sep():
   plt.show()
 
 # plotting of the linearly separable decision regions.
-# plot_decision_regions(X, y, classifier=ada)
+plot_decision_regions(X, y, classifier=ada)
 
 # plot losses 
 # plot_loss()
 
 # plot just the line.
-plot_linear_sep()
+plot_linear_sep(X, y, classifier=ada)
