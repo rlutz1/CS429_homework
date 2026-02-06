@@ -62,12 +62,12 @@ y_wine = np.where(y_wine == 1, 0, 1) # classes 1 (0) and 2 of grapes (1)
 # alcohol(1), magnesium(5), color intensity(10), hue(11) 
 # X_wine = df.iloc[0:100, [1, 5, 10, 11]].values # getting the vibe this is not linearly separable
 # X_wine = df.iloc[0:100, [10, 11]].values # this one kinda works... with eta = 0.01, n = 10000
-X_wine = df.iloc[0:100, range(1, 4)].values # this one kinda works... with eta = 0.01, n = 10000
+X_wine = df.iloc[0:100, [10, 11]].values # this one kinda works... with eta = 0.01, n = 10000
 print(X_wine)
 # print(X_wine)
 
 
-ada = AdalineGD(eta=0.01, n_iter=100) # note that eta needs to be small here!
+ada = AdalineGD(eta=0.01, n_iter=10000) # note that eta needs to be small here!
 ada.fit(X_wine, y_wine) # hand off the iris data and correct labels to learning algorithm
 # plotting of the linearly separable decision regions.
 plot_decision_regions(X_wine, y_wine, classifier=ada)
