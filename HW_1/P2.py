@@ -44,7 +44,7 @@ y_iris = df.iloc[0:100, 4].values # values in the 4th column of csv -> names of 
 y_iris = np.where(y_iris == "Iris-setosa", 0, 1) # setosa -> 0, versi 1
 
 # extract the other information defining the classes
-X_iris = df.iloc[0:100, range(0, 4)].values  
+X_iris = df.iloc[0:100, [0, 2]].values  
 
 # grab the wine dataset
 wine = 'https://archive.ics.uci.edu/ml/'\
