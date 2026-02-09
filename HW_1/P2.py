@@ -67,7 +67,7 @@ print(X_wine)
 # print(X_wine)
 
 
-ada = AdalineGD(eta=0.01, n_iter=10000) # note that eta needs to be small here!
+ada = AdalineGD(eta=0.01, n_iter=1000) # note that eta needs to be small here!
 ada.fit(X_wine, y_wine) # hand off the iris data and correct labels to learning algorithm
 # plotting of the linearly separable decision regions.
 plot_decision_regions(X_wine, y_wine, classifier=ada)
